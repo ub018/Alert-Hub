@@ -1,0 +1,239 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Group Chat & Emergency App</title>
+    <style>
+        /* CSS Variables for your Color Palette */
+        :root {
+            --cyprus: #003E40;
+            --cloud-white: #F2F2ED;
+            --emergency-red: #E63946;
+            --text-dark: #333333;
+            --text-light: #FFFFFF;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        body {
+            background-color: var(--cloud-white);
+            color: var(--text-dark);
+            height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        /* --- Registration Form Styles --- */
+        #registration-view {
+            background-color: white;
+            padding: 40px;
+            border-radius: 10px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+            width: 100%;
+            max-width: 400px;
+        }
+
+        #registration-view h2 {
+            margin-bottom: 20px;
+            color: var(--cyprus);
+            text-align: center;
+        }
+
+        .form-group {
+            margin-bottom: 15px;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: bold;
+        }
+
+        .form-group input {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            font-size: 16px;
+        }
+
+        .submit-btn {
+            width: 100%;
+            padding: 12px;
+            background-color: var(--cyprus);
+            color: var(--text-light);
+            border: none;
+            border-radius: 5px;
+            font-size: 16px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+
+        .submit-btn:hover {
+            background-color: #002b2c;
+        }
+
+        /* --- Dashboard Styles --- */
+        #dashboard-view {
+            display: none; /* Hidden until logged in */
+            width: 100%;
+            height: 100vh;
+            display: flex; /* Will be applied via JS */
+        }
+
+        /* Sidebar */
+        .sidebar {
+            width: 250px;
+            background-color: var(--cyprus);
+            color: var(--text-light);
+            padding: 20px 0;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .sidebar h3 {
+            text-align: center;
+            margin-bottom: 30px;
+            font-size: 24px;
+        }
+
+        .sidebar a {
+            color: var(--text-light);
+            text-decoration: none;
+            padding: 15px 25px;
+            display: block;
+            font-size: 18px;
+            transition: background 0.3s;
+        }
+
+        .sidebar a:hover {
+            background-color: rgba(255, 255, 255, 0.1);
+        }
+
+        /* Main Content */
+        .main-content {
+            flex-grow: 1;
+            padding: 40px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .main-content h1 {
+            color: var(--cyprus);
+            margin-bottom: 50px;
+            align-self: flex-start;
+        }
+
+        /* Emergency Button */
+        .emergency-btn {
+            background-color: var(--emergency-red);
+            color: white;
+            border: none;
+            border-radius: 50%;
+            width: 200px;
+            height: 200px;
+            font-size: 24px;
+            font-weight: bold;
+            cursor: pointer;
+            box-shadow: 0 10px 20px rgba(230, 57, 70, 0.4);
+            transition: transform 0.1s, box-shadow 0.1s;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+        }
+
+        .emergency-btn:active {
+            transform: scale(0.95);
+            box-shadow: 0 5px 10px rgba(230, 57, 70, 0.4);
+        }
+    </style>
+</head>
+<body>
+
+    <div id="registration-view">
+        <h2>Join Group Chat</h2>
+        <form id="reg-form">
+            <div class="form-group">
+                <label for="username">Username</label>
+                <input type="text" id="username" required placeholder="e.g., JohnDoe">
+            </div>
+            <div class="form-group">
+                <label for="email">Gmail Address</label>
+                <input type="email" id="email" required placeholder="example@gmail.com">
+            </div>
+            <div class="form-group">
+                <label for="phone">Phone Number</label>
+                <input type="tel" id="phone" required placeholder="+1 234 567 8900">
+            </div>
+            <button type="submit" class="submit-btn">Register</button>
+        </form>
+    </div>
+
+    <div id="dashboard-view" style="display: none;">
+        <div class="sidebar">
+            <h3>My App</h3>
+            <a href="#">Home</a>
+            <a href="#">Chats</a>
+            <a href="#">Group Chats</a>
+            <a href="#">Settings</a>
+        </div>
+
+        <div class="main-content">
+            <h1 id="welcome-message">Dashboard</h1>
+            
+            <button class="emergency-btn" onclick="triggerEmergency()">
+                EMERGENCY<br>CALL
+            </button>
+        </div>
+    </div>
+
+    <script>
+        // JavaScript Logic for Interface Interactivity
+
+        const regForm = document.getElementById('reg-form');
+        const regView = document.getElementById('registration-view');
+        const dashView = document.getElementById('dashboard-view');
+        const welcomeMessage = document.getElementById('welcome-message');
+
+        regForm.addEventListener('submit', function(event) {
+            event.preventDefault(); // Prevent page from reloading
+
+            // 1. Gather the data
+            const username = document.getElementById('username').value;
+            const email = document.getElementById('email').value;
+            const phone = document.getElementById('phone').value;
+
+            // 2. "Store" the data (Simulated for frontend)
+            const userData = { username, email, phone };
+            
+            // Note: In a real app, you would send this to your database (like Firebase) here.
+            // For now, we store it in the browser's local storage so you can see it works.
+            localStorage.setItem('chatAppUser', JSON.stringify(userData));
+
+            console.log("Developer Log: New user registered!", userData);
+
+            // 3. Switch to dashboard view
+            regView.style.display = 'none';
+            dashView.style.display = 'flex';
+            
+            // 4. Update header
+            welcomeMessage.innerText = `Welcome, ${username}!`;
+        });
+
+        // Function for the Emergency Button
+        function triggerEmergency() {
+            // In a real app, this would send a push notification to all group members
+            alert("🚨 EMERGENCY TRIGGERED! \n\nNotifications are being sent to your group members with your location.");
+        }
+    </script>
+</body>
+</html>
